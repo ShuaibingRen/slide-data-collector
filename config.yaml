@@ -1,0 +1,10 @@
+s3:
+  default_bucket: "my-imaging-bucket"
+  region: "us-east-1"
+  image_prefix: "deliveries/"
+
+schemas:
+  directory: "./schemas"
+
+output:
+  directory: "./output"

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "slide-data-collector"
+version = "0.1.0"
+description = "A lightweight (meta)data collection system for clinical slide imaging workflows"
+authors = []
+readme = "README.md"
+packages = [{ include = "collector" }]
+
+[tool.poetry.scripts]
+collector = "collector.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.0"
+pyyaml = "^6.0"
+pandas = "^2.0"
+openpyxl = "^3.1"
+boto3 = "^1.28"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

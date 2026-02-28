@@ -1,0 +1,68 @@
+name: Sample Metadata
+version: "1.0"
+description: "样本元数据 / Sample Metadata — 由临床团队填写"
+fields:
+  - name: sample_id
+    type: string
+    required: true
+    description: "唯一样本标识符 / Unique sample identifier"
+    example: "SPL-2024-001"
+
+  - name: patient_id
+    type: string
+    required: true
+    description: "患者 ID / Patient identifier"
+    example: "PAT-001"
+
+  - name: tissue_type
+    type: enum
+    required: true
+    values:
+      - Lung
+      - Breast
+      - Colon
+      - Liver
+      - Kidney
+      - Brain
+      - Skin
+      - Pancreas
+      - Prostate
+      - Ovary
+      - Other
+    description: "组织类型 / Tissue type"
+    example: "Lung"
+
+  - name: diagnosis
+    type: string
+    required: true
+    description: "诊断 / Diagnosis"
+    example: "Adenocarcinoma"
+
+  - name: collection_date
+    type: date
+    required: true
+    description: "采样日期 / Collection date (YYYY-MM-DD)"
+    example: "2024-01-15"
+
+  - name: fixation_method
+    type: enum
+    required: false
+    values:
+      - FFPE
+      - Fresh Frozen
+      - PFA
+      - Other
+    description: "固定方法 / Fixation method"
+    example: "FFPE"
+
+  - name: clinical_stage
+    type: string
+    required: false
+    description: "临床分期 / Clinical stage"
+    example: "Stage IIA"
+
+  - name: notes
+    type: string
+    required: false
+    description: "备注 / Notes"
+    example: ""

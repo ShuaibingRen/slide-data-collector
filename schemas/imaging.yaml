@@ -1,0 +1,87 @@
+name: Imaging Metadata
+version: "1.0"
+description: "成像元数据 / Imaging Metadata — 由 CRO 填写，随 S3 图像交付"
+fields:
+  - name: image_id
+    type: string
+    required: true
+    description: "唯一图像标识符 / Unique image identifier"
+    example: "IMG-2024-001-A-01"
+
+  - name: slide_id
+    type: string
+    required: true
+    description: "关联切片 ID / Associated slide identifier"
+    example: "SLD-2024-001-A"
+
+  - name: s3_path
+    type: string
+    required: true
+    description: "S3 存储路径 / S3 storage path"
+    example: "s3://my-bucket/deliveries/IMG-2024-001-A-01.ome.tiff"
+
+  - name: imaging_modality
+    type: enum
+    required: true
+    values:
+      - Brightfield
+      - Fluorescence
+      - Confocal
+      - Multiplex
+      - Other
+    description: "成像模态 / Imaging modality"
+    example: "Brightfield"
+
+  - name: scanner_model
+    type: string
+    required: false
+    description: "扫描仪型号 / Scanner model"
+    example: "Leica Aperio AT2"
+
+  - name: resolution_um_per_px
+    type: number
+    required: false
+    description: "分辨率 (μm/像素) / Resolution in micrometers per pixel"
+    example: "0.25"
+
+  - name: file_format
+    type: enum
+    required: true
+    values:
+      - TIFF
+      - OME-TIFF
+      - SVS
+      - NDPI
+      - CZI
+      - QPTIFF
+      - Other
+    description: "文件格式 / File format"
+    example: "OME-TIFF"
+
+  - name: file_size_gb
+    type: number
+    required: false
+    description: "文件大小 (GB) / File size in gigabytes"
+    example: "2.5"
+
+  - name: imaging_date
+    type: date
+    required: true
+    description: "成像日期 / Imaging date (YYYY-MM-DD)"
+    example: "2024-02-01"
+
+  - name: qc_status
+    type: enum
+    required: true
+    values:
+      - Pass
+      - Fail
+      - Pending
+    description: "质控状态 / Quality control status"
+    example: "Pass"
+
+  - name: qc_notes
+    type: string
+    required: false
+    description: "质控备注 / QC notes"
+    example: ""
