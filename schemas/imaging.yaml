@@ -8,11 +8,11 @@ fields:
     description: "唯一图像标识符 / Unique image identifier"
     example: "IMG-2024-001-A-01"
 
-  - name: slide_id
+  - name: sample_id
     type: string
     required: true
-    description: "关联切片 ID / Associated slide identifier"
-    example: "SLD-2024-001-A"
+    description: "关联样本 ID / Associated sample identifier"
+    example: "SPL-2024-001-A"
 
   - name: s3_path
     type: string

@@ -1,65 +1,55 @@
 name: Sample Metadata
 version: "1.0"
-description: "样本元数据 / Sample Metadata — 由临床团队填写"
+description: "样本元数据 / Sample Metadata — 由制备端填写"
 fields:
   - name: sample_id
     type: string
     required: true
     description: "唯一样本标识符 / Unique sample identifier"
-    example: "SPL-2024-001"
+    example: "SPL-2024-001-A"
 
-  - name: patient_id
+  - name: donor_id
     type: string
     required: true
-    description: "患者 ID / Patient identifier"
-    example: "PAT-001"
+    description: "关联供体 ID / Associated donor identifier"
+    example: "DNR-2024-001"
 
-  - name: tissue_type
+  - name: stain_type
     type: enum
     required: true
     values:
-      - Lung
-      - Breast
-      - Colon
-      - Liver
-      - Kidney
-      - Brain
-      - Skin
-      - Pancreas
-      - Prostate
-      - Ovary
+      - "H&E"
+      - IHC
+      - IF
+      - mIF
+      - FISH
       - Other
-    description: "组织类型 / Tissue type"
-    example: "Lung"
+    description: "染色类型 / Stain type"
+    example: "H&E"
 
-  - name: diagnosis
+  - name: section_thickness_um
+    type: number
+    required: false
+    description: "切片厚度 (μm) / Section thickness in micrometers"
+    example: "5"
+
+  - name: antibody_panel
     type: string
-    required: true
-    description: "诊断 / Diagnosis"
-    example: "Adenocarcinoma"
+    required: false
+    description: "抗体 panel (逗号分隔) / Antibody panel (comma-separated)"
+    example: "CD3,CD8,PD-L1,DAPI"
 
-  - name: collection_date
+  - name: preparation_date
     type: date
     required: true
-    description: "采样日期 / Collection date (YYYY-MM-DD)"
-    example: "2024-01-15"
+    description: "制备日期 / Preparation date (YYYY-MM-DD)"
+    example: "2024-01-20"
 
-  - name: fixation_method
-    type: enum
-    required: false
-    values:
-      - FFPE
-      - Fresh Frozen
-      - PFA
-      - Other
-    description: "固定方法 / Fixation method"
-    example: "FFPE"
-
-  - name: clinical_stage
+  - name: operator
     type: string
     required: false
-    description: "临床分期 / Clinical stage"
-    example: "Stage IIA"
+    description: "操作人 / Operator name"
+    example: "Zhang Wei"
 
   - name: notes
     type: string

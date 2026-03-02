@@ -108,7 +108,7 @@ def _read_manifest(path: str) -> pd.DataFrame:
     """Read a manifest from Excel or CSV, skipping the example row."""
     path_obj = Path(path)
     if path_obj.suffix == ".xlsx":
-        df = pd.read_excel(path, sheet_name="Data / 数据", header=0, skiprows=[1])
+        df = pd.read_excel(path, sheet_name="Data - 数据", header=0, skiprows=[1])
     elif path_obj.suffix == ".csv":
         df = pd.read_csv(path, header=0, skiprows=[1])
     else:

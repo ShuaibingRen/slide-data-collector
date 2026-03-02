@@ -26,7 +26,7 @@ def _resolve_schemas_dir(config: dict) -> str:
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["--help", "-h"])
-VALID_TYPES = ["sample", "slide", "imaging", "all"]
+VALID_TYPES = ["donor", "sample", "imaging", "all"]
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -54,7 +54,7 @@ def template():
     "-t", "--type", "data_type",
     required=True,
     type=click.Choice(VALID_TYPES, case_sensitive=False),
-    help="Template type: sample, slide, imaging, or all",
+    help="Template type: donor, sample, imaging, or all",
 )
 @click.option(
     "-o", "--output", "output_dir",
@@ -94,7 +94,7 @@ def template_gen(data_type, output_dir):
 @click.argument("manifest_path", type=click.Path(exists=True))
 @click.option(
     "-t", "--type", "data_type",
-    type=click.Choice(["sample", "slide", "imaging"], case_sensitive=False),
+    type=click.Choice(["donor", "sample", "imaging"], case_sensitive=False),
     default=None,
     help="Schema type. Auto-detected from filename if not specified.",
 )
@@ -113,7 +113,7 @@ def validate_cmd(manifest_path, data_type):
     # Auto-detect type from filename if not specified
     if data_type is None:
         basename = Path(manifest_path).stem.lower()
-        for t in ["sample", "slide", "imaging"]:
+        for t in ["donor", "sample", "imaging"]:
             if t in basename:
                 data_type = t
                 break
@@ -190,22 +190,22 @@ def s3_check(manifest_path, bucket):
 # ============================================================
 
 @main.command("report")
+@click.option("--donor", "donor_path", required=True, type=click.Path(exists=True),
+              help="Path to filled donor manifest")
 @click.option("--sample", "sample_path", required=True, type=click.Path(exists=True),
               help="Path to filled sample manifest")
-@click.option("--slide", "slide_path", required=True, type=click.Path(exists=True),
-              help="Path to filled slide manifest")
 @click.option("--imaging", "imaging_path", required=True, type=click.Path(exists=True),
               help="Path to filled imaging manifest")
 @click.option("-o", "--output", "output_path", default="./output/delivery_report.xlsx",
               help="Output report path")
-def report_cmd(sample_path, slide_path, imaging_path, output_path):
+def report_cmd(donor_path, sample_path, imaging_path, output_path):
     """Generate a merged delivery report from all manifests.
 
     从三份清单生成合并交付报告。
     """
     from collector.report import generate_report, format_report_summary
 
-    generate_report(sample_path, slide_path, imaging_path, output_path)
+    generate_report(donor_path, sample_path, imaging_path, output_path)
     click.echo(format_report_summary(output_path))
 
 

@@ -42,15 +42,15 @@ def generate_template(schema_path: str, output_path: str) -> str:
 
     # --- Instructions Sheet ---
     ws_instr = wb.active
-    ws_instr.title = "Instructions / 填写说明"
+    ws_instr.title = "Instructions - 填写说明"
     _build_instructions_sheet(ws_instr, schema)
 
     # --- Data Sheet ---
-    ws_data = wb.create_sheet("Data / 数据")
+    ws_data = wb.create_sheet("Data - 数据")
     _build_data_sheet(ws_data, schema)
 
     # Make Data sheet active by default
-    wb.active = wb["Data / 数据"]
+    wb.active = wb["Data - 数据"]
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     wb.save(output_path)
