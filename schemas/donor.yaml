@@ -1,68 +1,131 @@
 name: Donor Metadata
-version: "1.0"
+version: "2.0"
 description: "供体元数据 / Donor Metadata — 由临床团队填写"
 fields:
-  - name: donor_id
+  - name: participant_id
     type: string
     required: true
-    description: "唯一供体标识符 / Unique donor identifier"
-    example: "DNR-2024-001"
+    description: "参与者唯一标识符 / Unique participant identifier"
+    example: "PAT-2026-0001"
 
-  - name: patient_id
-    type: string
-    required: true
-    description: "患者 ID / Patient identifier"
-    example: "PAT-001"
-
-  - name: tissue_type
+  - name: gender
     type: enum
     required: true
     values:
-      - Lung
-      - Breast
-      - Colon
-      - Liver
-      - Kidney
-      - Brain
-      - Skin
-      - Pancreas
-      - Prostate
-      - Ovary
-      - Other
-    description: "组织类型 / Tissue type"
-    example: "Lung"
+      - Male
+      - Female
+      - unk
+    description: "性别 / Gender"
+    example: "Female"
 
-  - name: diagnosis
+  - name: age_at_diagnosis
+    type: number
+    required: true
+    description: "确诊时的年龄 / Age at diagnosis"
+    example: "60"
+
+  - name: primary_diagnosis
     type: string
     required: true
-    description: "诊断 / Diagnosis"
-    example: "Adenocarcinoma"
+    description: "组织学诊断结果 / Primary histological diagnosis"
+    example: "Infiltrating duct carcinoma"
 
-  - name: collection_date
+  - name: morphology
+    type: string
+    required: false
+    description: "基于ICD-O-3的组织形态学代码 / ICD-O-3 morphology code"
+    example: "8500/3"
+
+  - name: site_of_resection_or_biopsy
+    type: string
+    required: true
+    description: "切除或活检的部位 / Site of resection or biopsy"
+    example: ""
+
+  - name: tissue_or_organ_of_origin
+    type: string
+    required: true
+    description: "原发组织或器官 / Tissue or organ of origin"
+    example: ""
+
+  - name: tumor_grade
+    type: enum
+    required: false
+    values:
+      - G1
+      - G2
+      - G3
+      - G4
+      - GX
+    description: "肿瘤分级 / Tumor grade"
+    example: "G2"
+
+  - name: clinical_stage_AJCC
+    type: string
+    required: false
+    description: "AJCC临床分期 / AJCC clinical stage"
+    example: "IIa"
+
+  - name: pathologic_stage_AJCC
+    type: string
+    required: false
+    description: "AJCC病理分期 / AJCC pathologic stage"
+    example: "IIa"
+
+  - name: molecular_subtype
+    type: string
+    required: false
+    description: "分子亚型 / Molecular subtype"
+    example: "Triple-negative"
+
+  - name: date_of_diagnosis
     type: date
-    required: true
-    description: "采样日期 / Collection date (YYYY-MM-DD)"
-    example: "2024-01-15"
+    required: false
+    description: "诊断日期 / Date of diagnosis (YYYY-MM-DD)"
+    example: "2023-01-01"
 
-  - name: fixation_method
+  - name: date_of_progression
+    type: date
+    required: false
+    description: "进展日期 / Date of progression (YYYY-MM-DD)"
+    example: "2024-02-02"
+
+  - name: date_of_last_followup
+    type: date
+    required: false
+    description: "末次随访日期 / Date of last follow-up (YYYY-MM-DD)"
+    example: "2025-03-03"
+
+  - name: date_of_death
+    type: date
+    required: false
+    description: "死亡日期 / Date of death (YYYY-MM-DD)"
+    example: ""
+
+  - name: vital_status
     type: enum
     required: false
     values:
-      - FFPE
-      - Fresh Frozen
-      - PFA
-      - Other
-    description: "固定方法 / Fixation method"
-    example: "FFPE"
+      - Alive
+      - Dead
+      - unk
+    description: "末次随访生存状态 / Vital status at last follow-up"
+    example: "Alive"
 
-  - name: clinical_stage
+  - name: last_known_disease_status
     type: string
     required: false
-    description: "临床分期 / Clinical stage"
-    example: "Stage IIA"
+    description: "最后随访状态 / Last known disease status"
+    example: "tumor free"
 
-  - name: notes
+  - name: treatment_type
     type: string
     required: false
-    description: "备注 / Notes"
+    description: "治疗类型 / Treatment type"
+    example: ""
+
+  - name: therapeutic_agents
+    type: string
+    required: false
+    description: "治疗药物或制剂 / Therapeutic agents"
     example: ""

@@ -1,87 +1,125 @@
 name: Imaging Metadata
-version: "1.0"
+version: "2.0"
 description: "成像元数据 / Imaging Metadata — 由 CRO 填写，随 S3 图像交付"
 fields:
-  - name: image_id
+  - name: data_file_id
     type: string
     required: true
-    description: "唯一图像标识符 / Unique image identifier"
-    example: "IMG-2024-001-A-01"
+    description: "数据文件唯一标识符 / Unique data file identifier"
+    example: "DAT-20260101-0001"
 
-  - name: sample_id
+  - name: filename
     type: string
     required: true
-    description: "关联样本 ID / Associated sample identifier"
-    example: "SPL-2024-001-A"
+    description: "文件名或目录名，推荐由字母、数字、下划线或破折号组成。对于目录型格式（如 vsi）可填入目录名，整个目录对应一条记录 / Filename or directory name. For directory-based formats (e.g., vsi), enter the directory name; one directory = one record."
+    example: "15-35626"
+
+  - name: file_format
+    type: string
+    required: true
+    description: "文件格式。对于目录型格式填写 dir（如 vsi/est），单文件格式填写具体后缀（如 ometiff, tif, zip） / File format. Use 'dir' for directory-based formats (e.g., vsi/est), or the file extension for single-file formats (e.g., ometiff, tif, zip)."
+    example: "dir"
+
+  - name: parent_biospecimen_id
+    type: string
+    required: true
+    description: "原始生物样本标识符 / Parent biospecimen identifier"
+    example: "HS-20260101-001"
+
+  - name: data_level
+    type: enum
+    required: true
+    values:
+      - level1
+      - level2
+    description: "数据层级：level1（原始成像数据），level2（光照校正、拼接、配准后的单一文件，如OME-TIFF） / Data level"
+    example: "level2"
 
   - name: s3_path
     type: string
     required: true
     description: "S3 存储路径 / S3 storage path"
-    example: "s3://my-bucket/deliveries/IMG-2024-001-A-01.ome.tiff"
+    example: "s3://cartabio-data-receiver/huabio/15-35626/"
 
-  - name: imaging_modality
+  - name: image_assay_type
     type: enum
-    required: true
+    required: false
     values:
-      - Brightfield
-      - Fluorescence
-      - Confocal
-      - Multiplex
-      - Other
-    description: "成像模态 / Imaging modality"
-    example: "Brightfield"
+      - safe
+      - h&e
+      - mihc
+      - mxif
+    description: "成像技术 / Image assay type"
+    example: "mxif"
 
-  - name: scanner_model
+  - name: channel_metadata_filename
     type: string
     required: false
-    description: "扫描仪型号 / Scanner model"
-    example: "Leica Aperio AT2"
+    description: "通道元信息文件名 / Channel metadata filename"
+    example: "channel_cycle_marker.csv"
 
-  - name: resolution_um_per_px
-    type: number
-    required: false
-    description: "分辨率 (μm/像素) / Resolution in micrometers per pixel"
-    example: "0.25"
-
-  - name: file_format
-    type: enum
-    required: true
-    values:
-      - TIFF
-      - OME-TIFF
-      - SVS
-      - NDPI
-      - CZI
-      - QPTIFF
-      - Other
-    description: "文件格式 / File format"
-    example: "OME-TIFF"
-
-  - name: file_size_gb
-    type: number
-    required: false
-    description: "文件大小 (GB) / File size in gigabytes"
-    example: "2.5"
-
-  - name: imaging_date
-    type: date
-    required: true
-    description: "成像日期 / Imaging date (YYYY-MM-DD)"
-    example: "2024-02-01"
-
-  - name: qc_status
-    type: enum
-    required: true
-    values:
-      - Pass
-      - Fail
-      - Pending
-    description: "质控状态 / Quality control status"
-    example: "Pass"
-
-  - name: qc_notes
+  - name: microscope
     type: string
     required: false
-    description: "质控备注 / QC notes"
-    example: ""
+    description: "显微镜制造商和型号 / Microscope manufacturer and model"
+    example: "Olympus VS200"
+
+  - name: software
+    type: string
+    required: false
+    description: "图像采集和预处理软件 / Image acquisition and preprocessing software"
+    example: "Olympus VS200 ASW v3.4.1"
+
+  - name: objective
+    type: string
+    required: false
+    description: "物镜名称或描述 / Objective lens name or description"
+    example: "UPlanXApo"
+
+  - name: nominal_magnification
+    type: string
+    required: false
+    description: "标称放大倍率 / Nominal magnification"
+    example: "20X"
+
+  - name: lensNA
+    type: number
+    required: false
+    description: "数值孔径 / Numerical aperture"
+    example: "0.8"
+
+  - name: PhysicalSizeX
+    type: number
+    required: false
+    description: "像素在X轴方向上的物理尺寸 / Physical size per pixel in X direction"
+    example: "0.325"
+
+  - name: PhysicalSizeXUnit
+    type: string
+    required: false
+    description: "像素在X轴方向上的物理尺寸单位 / Unit of PhysicalSizeX"
+    example: "μm"
+
+  - name: PhysicalSizeY
+    type: number
+    required: false
+    description: "像素在Y轴方向上的物理尺寸 / Physical size per pixel in Y direction"
+    example: "0.325"
+
+  - name: PhysicalSizeYUnit
+    type: string
+    required: false
+    description: "像素在Y轴方向上的物理尺寸单位 / Unit of PhysicalSizeY"
+    example: "μm"
+
+  - name: Type
+    type: string
+    required: false
+    description: "图像位深 / Image bit depth / pixel type"
+    example: "int16"
+
+  - name: Overlap
+    type: number
+    required: false
+    description: "相邻FOV之间的重叠比例 / Overlap ratio between adjacent FOVs"
+    example: "0.2"

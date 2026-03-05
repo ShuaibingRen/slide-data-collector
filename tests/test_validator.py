@@ -35,22 +35,22 @@ class TestSchemaLoader:
     def test_get_field_names(self):
         schema = load_schema(os.path.join(SCHEMAS_DIR, "donor.yaml"))
         names = get_field_names(schema)
-        assert "donor_id" in names
-        assert "patient_id" in names
-        assert "tissue_type" in names
+        assert "participant_id" in names
+        assert "gender" in names
+        assert "primary_diagnosis" in names
 
     def test_get_required_fields(self):
         schema = load_schema(os.path.join(SCHEMAS_DIR, "donor.yaml"))
         required = get_required_fields(schema)
-        assert "donor_id" in required
-        assert "notes" not in required
+        assert "participant_id" in required
+        assert "treatment_type" not in required
 
     def test_get_enum_values(self):
         schema = load_schema(os.path.join(SCHEMAS_DIR, "donor.yaml"))
-        values = get_enum_values(schema, "tissue_type")
+        values = get_enum_values(schema, "gender")
         assert values is not None
-        assert "Lung" in values
-        assert get_enum_values(schema, "donor_id") is None
+        assert "Male" in values
+        assert get_enum_values(schema, "participant_id") is None
 
 
 class TestExcelGeneration:
@@ -106,11 +106,12 @@ class TestValidator:
 
     def test_valid_donor_manifest(self, tmp_path):
         manifest_path = self._create_manifest(tmp_path, {
-            "donor_id": "DNR-001",
-            "patient_id": "PAT-001",
-            "tissue_type": "Lung",
-            "diagnosis": "Adenocarcinoma",
-            "collection_date": "2024-01-15",
+            "participant_id": "PAT-2026-0001",
+            "gender": "Female",
+            "age_at_diagnosis": 60,
+            "primary_diagnosis": "Infiltrating duct carcinoma",
+            "site_of_resection_or_biopsy": "Breast",
+            "tissue_or_organ_of_origin": "Breast",
         }, "donor")
 
         schema_path = os.path.join(SCHEMAS_DIR, "donor.yaml")
@@ -119,52 +120,55 @@ class TestValidator:
 
     def test_missing_required_field(self, tmp_path):
         manifest_path = self._create_manifest(tmp_path, {
-            "donor_id": "DNR-001",
-            # patient_id missing
-            "tissue_type": "Lung",
-            "diagnosis": "Adenocarcinoma",
-            "collection_date": "2024-01-15",
+            "participant_id": "PAT-2026-0001",
+            # gender missing
+            "age_at_diagnosis": 60,
+            "primary_diagnosis": "Infiltrating duct carcinoma",
+            "site_of_resection_or_biopsy": "Breast",
+            "tissue_or_organ_of_origin": "Breast",
         }, "donor")
 
         schema_path = os.path.join(SCHEMAS_DIR, "donor.yaml")
         errors = validate_manifest(manifest_path, schema_path)
-        assert any("patient_id" in e.field for e in errors)
+        assert any("gender" in e.field for e in errors)
 
     def test_invalid_enum_value(self, tmp_path):
         manifest_path = self._create_manifest(tmp_path, {
-            "donor_id": "DNR-001",
-            "patient_id": "PAT-001",
-            "tissue_type": "InvalidType",  # Not in enum
-            "diagnosis": "Adenocarcinoma",
-            "collection_date": "2024-01-15",
+            "participant_id": "PAT-2026-0001",
+            "gender": "Unknown",  # Not in enum (valid: Male, Female, unk)
+            "age_at_diagnosis": 60,
+            "primary_diagnosis": "Infiltrating duct carcinoma",
+            "site_of_resection_or_biopsy": "Breast",
+            "tissue_or_organ_of_origin": "Breast",
         }, "donor")
 
         schema_path = os.path.join(SCHEMAS_DIR, "donor.yaml")
         errors = validate_manifest(manifest_path, schema_path)
-        assert any("tissue_type" in e.field for e in errors)
+        assert any("gender" in e.field for e in errors)
 
     def test_invalid_date_format(self, tmp_path):
         manifest_path = self._create_manifest(tmp_path, {
-            "donor_id": "DNR-001",
-            "patient_id": "PAT-001",
-            "tissue_type": "Lung",
-            "diagnosis": "Adenocarcinoma",
-            "collection_date": "Jan 15 2024",  # Wrong format
+            "participant_id": "PAT-2026-0001",
+            "gender": "Female",
+            "age_at_diagnosis": 60,
+            "primary_diagnosis": "Infiltrating duct carcinoma",
+            "site_of_resection_or_biopsy": "Breast",
+            "tissue_or_organ_of_origin": "Breast",
+            "date_of_diagnosis": "Jan 15 2024",  # Wrong format
         }, "donor")
 
         schema_path = os.path.join(SCHEMAS_DIR, "donor.yaml")
         errors = validate_manifest(manifest_path, schema_path)
-        assert any("collection_date" in e.field for e in errors)
+        assert any("date_of_diagnosis" in e.field for e in errors)
 
     def test_valid_imaging_manifest(self, tmp_path):
         manifest_path = self._create_manifest(tmp_path, {
-            "image_id": "IMG-001",
-            "sample_id": "SPL-001",
-            "s3_path": "s3://bucket/images/IMG-001.ome.tiff",
-            "imaging_modality": "Brightfield",
-            "file_format": "OME-TIFF",
-            "imaging_date": "2024-02-01",
-            "qc_status": "Pass",
+            "data_file_id": "DAT-20260101-0001",
+            "filename": "15-35626",
+            "file_format": "dir",
+            "parent_biospecimen_id": "HS-20260101-001",
+            "data_level": "level1",
+            "s3_path": "s3://cartabio-data-receiver/huabio/15-35626/",
         }, "imaging")
 
         schema_path = os.path.join(SCHEMAS_DIR, "imaging.yaml")

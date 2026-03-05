@@ -1,58 +1,52 @@
 name: Sample Metadata
-version: "1.0"
+version: "2.0"
 description: "样本元数据 / Sample Metadata — 由制备端填写"
 fields:
-  - name: sample_id
+  - name: biospecimen_id
     type: string
     required: true
-    description: "唯一样本标识符 / Unique sample identifier"
-    example: "SPL-2024-001-A"
+    description: "样本唯一标识符 / Unique biospecimen identifier"
+    example: "HS-20260101-001"
 
-  - name: donor_id
+  - name: parent_id
     type: string
     required: true
-    description: "关联供体 ID / Associated donor identifier"
-    example: "DNR-2024-001"
+    description: "样本来源参与者的唯一标识符 / Participant identifier this sample originates from"
+    example: "PAT-2026-0001"
 
-  - name: stain_type
+  - name: tissue_harvest_site
+    type: string
+    required: true
+    description: "样本来源组织 / Tissue harvest site"
+    example: "Breast"
+
+  - name: tissue_tumor_status
     type: enum
     required: true
     values:
-      - "H&E"
-      - IHC
-      - IF
-      - mIF
-      - FISH
-      - Other
-    description: "染色类型 / Stain type"
-    example: "H&E"
+      - Primary
+      - Local Recurrence
+      - Distant Recurrence
+      - Metastatic
+    description: "样本肿瘤状态 / Tumor status of the sample"
+    example: "Primary"
 
-  - name: section_thickness_um
-    type: number
+  - name: acquisition_method_type
+    type: enum
     required: false
-    description: "切片厚度 (μm) / Section thickness in micrometers"
-    example: "5"
+    values:
+      - resection
+      - biopsy
+      - other
+      - unk
+    description: "样本的获取方法 / Method used to acquire the sample"
+    example: "resection"
 
-  - name: antibody_panel
-    type: string
+  - name: preservation_method
+    type: enum
     required: false
-    description: "抗体 panel (逗号分隔) / Antibody panel (comma-separated)"
-    example: "CD3,CD8,PD-L1,DAPI"
-
-  - name: preparation_date
-    type: date
-    required: true
-    description: "制备日期 / Preparation date (YYYY-MM-DD)"
-    example: "2024-01-20"
-
-  - name: operator
-    type: string
-    required: false
-    description: "操作人 / Operator name"
-    example: "Zhang Wei"
-
-  - name: notes
-    type: string
-    required: false
-    description: "备注 / Notes"
-    example: ""
+    values:
+      - FFPE
+      - Frozen
+    description: "样本保存方法 / Sample preservation method"
+    example: "FFPE"
