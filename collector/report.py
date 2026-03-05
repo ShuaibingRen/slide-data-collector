@@ -29,7 +29,7 @@ def generate_report(
 ) -> str:
     """Merge three manifests into a single delivery report.
 
-    Links: donor --(donor_id)--> sample --(sample_id)--> imaging
+    Links: donor --(participant_id / parent_id)--> sample --(biospecimen_id / parent_biospecimen_id)--> imaging
 
     Args:
         donor_path: Path to filled donor manifest.
@@ -46,24 +46,24 @@ def generate_report(
 
     # Prefix columns to avoid collision (except join keys)
     df_donor = df_donor.rename(
-        columns={c: f"donor.{c}" for c in df_donor.columns if c != "donor_id"}
+        columns={c: f"donor.{c}" for c in df_donor.columns if c != "participant_id"}
     )
     df_sample = df_sample.rename(
-        columns={c: f"sample.{c}" for c in df_sample.columns if c not in ("sample_id", "donor_id")}
+        columns={c: f"sample.{c}" for c in df_sample.columns if c not in ("biospecimen_id", "parent_id")}
     )
     df_imaging = df_imaging.rename(
-        columns={c: f"imaging.{c}" for c in df_imaging.columns if c not in ("image_id", "sample_id")}
+        columns={c: f"imaging.{c}" for c in df_imaging.columns if c not in ("data_file_id", "parent_biospecimen_id")}
     )
 
     # Merge: imaging -> sample -> donor
-    merged = df_imaging.merge(df_sample, on="sample_id", how="left")
-    merged = merged.merge(df_donor, on="donor_id", how="left")
+    merged = df_imaging.merge(df_sample, left_on="parent_biospecimen_id", right_on="biospecimen_id", how="left")
+    merged = merged.merge(df_donor, left_on="parent_id", right_on="participant_id", how="left")
 
     # Identify linkage issues
     merged["_link_status"] = "OK"
-    merged.loc[merged["donor_id"].isna(), "_link_status"] = "Missing sample link"
+    merged.loc[merged["parent_id"].isna(), "_link_status"] = "Missing sample link"
     merged.loc[
-        merged["donor.patient_id"].isna() & merged["donor_id"].notna(),
+        merged["donor.participant_id"].isna() & merged["parent_id"].notna(),
         "_link_status",
     ] = "Missing donor link"
 

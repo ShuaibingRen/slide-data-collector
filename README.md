@@ -91,8 +91,8 @@ collector validate ./filled/some_file.xlsx --type imaging
 
 ```
 ❌ Found 2 error(s) / 发现 2 个错误:
-  • Row 3, [patient_id]: Required field is empty / 必填字段为空
-  • Row 4, [tissue_type]: Invalid value 'XXX'. Allowed: Lung, Breast, ... / 无效值
+  • Row 3, [gender]: Required field is empty / 必填字段为空
+  • Row 4, [data_level]: Invalid value 'XXX'. Allowed: level1, level2 / 无效值
 ```
 
 ### 4. 检查 S3 交付
@@ -175,19 +175,26 @@ collector report \
 三层链式结构，通过 ID 关联：
 
 ```
-Donor (供体)              Sample (样本)            Imaging (成像)
-├── donor_id ──────────── donor_id
-├── patient_id            ├── sample_id ────────── sample_id
-├── tissue_type*          ├── stain_type*          ├── image_id
-├── diagnosis             ├── section_thickness    ├── s3_path
-├── collection_date       ├── antibody_panel       ├── imaging_modality*
-├── fixation_method*      ├── preparation_date     ├── scanner_model
-├── clinical_stage        ├── operator             ├── resolution_um_per_px
-└── notes                 └── notes                ├── file_format*
-                                                   ├── file_size_gb
-                                                   ├── imaging_date
-                                                   ├── qc_status*
-                                                   └── qc_notes
+Donor (供体)                    Sample (样本)                  Imaging (成像)
+├── participant_id ──────────── parent_id
+├── gender*                     ├── biospecimen_id ──────────── parent_biospecimen_id
+├── age_at_diagnosis            ├── tissue_harvest_site         ├── data_file_id
+├── primary_diagnosis           ├── tissue_tumor_status*        ├── filename
+├── morphology                  ├── acquisition_method_type*    ├── file_format
+├── site_of_resection_or_biopsy ├── preservation_method*        ├── data_level*
+├── tissue_or_organ_of_origin                                   ├── s3_path
+├── tumor_grade*                                                ├── image_assay_type*
+├── clinical_stage_AJCC                                         ├── channel_metadata_filename
+├── pathologic_stage_AJCC                                       ├── microscope
+├── molecular_subtype                                           ├── software
+├── date_of_diagnosis                                           ├── objective
+├── date_of_progression                                         ├── nominal_magnification
+├── date_of_last_followup                                       ├── lensNA
+├── date_of_death                                               ├── PhysicalSizeX/Y
+├── vital_status*                                               ├── PhysicalSizeXUnit/YUnit
+├── last_known_disease_status                                   ├── Type
+├── treatment_type                                              └── Overlap
+└── therapeutic_agents
 
 * = 枚举类型（有预定义可选值）
 ```
